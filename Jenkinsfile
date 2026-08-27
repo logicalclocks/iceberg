@@ -41,7 +41,12 @@ pipeline {
     DOCKER_IMAGE = 'eclipse-temurin:17-jdk'
     HOST_GRADLE_HOME = '/home/jenkinsmaster/.gradle-iceberg'
     CONTAINER_GRADLE_HOME = '/gradle-home'
-    GRADLE_OPTS = '-Xmx4G'
+    // io.hops hadoop pulls com.logicalclocks:service-discovery-client:0.7.2, which is not
+    // published to any nexus.hops.works repository -- hops-artifacts only has 0.8. It lives
+    // in the agent's shared Maven cache, put there by the Maven builds, so Gradle's
+    // mavenLocal() is pointed at that cache instead of the container's empty ~/.m2.
+    HOST_MAVEN_REPO = '/home/jenkinsmaster/.m2'
+    MAVEN_LOCAL_REPO = '/maven-repo/repository'
     ICEBERG_REPOSITORY = '/opt/repository/master/iceberg'
     RUNTIME_PROJECT = ':iceberg-spark:iceberg-spark-runtime-4.1_2.13'
     // Only the Spark 4.1 runtime ships. Clearing flinkVersions and kafkaVersions keeps
@@ -92,10 +97,11 @@ pipeline {
               -u "$(id -u):$(id -g)" \
               -v "$WORKSPACE:$WORKSPACE" \
               -v "$HOST_GRADLE_HOME:$CONTAINER_GRADLE_HOME" \
+              -v "$HOST_MAVEN_REPO:/maven-repo:ro" \
               -w "$WORKSPACE" \
               -e HOME=/tmp \
               -e GRADLE_USER_HOME="$CONTAINER_GRADLE_HOME" \
-              -e GRADLE_OPTS="$GRADLE_OPTS" \
+              -e MAVEN_LOCAL_REPO="$MAVEN_LOCAL_REPO" \
               -e RUNTIME_PROJECT="$RUNTIME_PROJECT" \
               -e BUILD_MATRIX_ARGS="$BUILD_MATRIX_ARGS" \
               -e UPDATE_ARG="$UPDATE_ARG" \
@@ -112,6 +118,7 @@ pipeline {
                 # HOPS_USER/HOPS_PASSWORD authenticate the nexus.hops.works repository that
                 # serves io.hops.hive and io.hops hadoop. Resolution fails outright without them.
                 ./gradlew --no-daemon $UPDATE_ARG $BUILD_MATRIX_ARGS \
+                  -Dmaven.repo.local="$MAVEN_LOCAL_REPO" \
                   "${RUNTIME_PROJECT}:shadowJar" -x test -x integrationTest
               '
           '''
