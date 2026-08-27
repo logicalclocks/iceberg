@@ -117,6 +117,14 @@ allprojects {
   repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+      name = "hops"
+      url = "https://nexus.hops.works/repository/hops-artifacts"
+      credentials {
+        username = System.getenv("HOPS_USER")
+        password = System.getenv("HOPS_PASSWORD")
+      }
+    }
   }
 }
 
@@ -842,6 +850,22 @@ project(':iceberg-hive-metastore') {
       exclude group: 'com.tdunning', module: 'json'
       exclude group: 'javax.transaction', module: 'transaction-api'
       exclude group: 'com.zaxxer', module: 'HikariCP'
+    }
+
+    // Hive 4 moved the metastore client into hive-standalone-metastore-common, which no longer
+    // drags in hive-common (HiveConf, HiveVersionInfo) or hive-serde (the serde2.typeinfo and
+    // objectinspector families) the way Hive 2.3's fat hive-metastore did.
+    compileOnly(libs.hive2.common) {
+      exclude group: 'org.apache.logging.log4j'
+      exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+      exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    }
+    compileOnly(libs.hive2.serde) {
+      exclude group: 'org.apache.avro', module: 'avro'
+      exclude group: 'org.apache.logging.log4j'
+      exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+      exclude group: 'com.google.code.findbugs', module: 'jsr305'
+      exclude group: 'org.apache.parquet', module: 'parquet-hadoop-bundle'
     }
 
     // By default, hive-exec is a fat/uber jar and it exports a guava library

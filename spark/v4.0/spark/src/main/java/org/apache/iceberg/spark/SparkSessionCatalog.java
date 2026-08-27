@@ -347,7 +347,7 @@ public class SparkSessionCatalog<
     }
 
     Configuration conf = SparkSession.active().sessionState().newHadoopConf();
-    String envHmsUri = conf.get(HiveConf.ConfVars.METASTOREURIS.varname, null);
+    String envHmsUri = conf.get(HiveConf.ConfVars.METASTORE_URIS.varname, null);
     if (envHmsUri == null) {
       return;
     }

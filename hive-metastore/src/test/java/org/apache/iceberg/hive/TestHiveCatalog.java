@@ -1136,7 +1136,7 @@ public class TestHiveCatalog extends CatalogTests<HiveCatalog> {
 
     catalogWithSlash.initialize(
         "hive_catalog", ImmutableMap.of(CatalogProperties.WAREHOUSE_LOCATION, wareHousePath + "/"));
-    assertThat(catalogWithSlash.getConf().get(HiveConf.ConfVars.METASTOREWAREHOUSE.varname))
+    assertThat(catalogWithSlash.getConf().get(HiveConf.ConfVars.METASTORE_WAREHOUSE.varname))
         .as("Should have trailing slash stripped")
         .isEqualTo(wareHousePath);
   }

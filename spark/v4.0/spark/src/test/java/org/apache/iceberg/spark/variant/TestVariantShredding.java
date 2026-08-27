@@ -18,7 +18,7 @@
  */
 package org.apache.iceberg.spark.variant;
 
-import static org.apache.hadoop.hive.conf.HiveConf.ConfVars.METASTOREURIS;
+import static org.apache.hadoop.hive.conf.HiveConf.ConfVars.METASTORE_URIS;
 import static org.apache.iceberg.TableProperties.PARQUET_ROW_GROUP_SIZE_BYTES;
 import static org.apache.parquet.schema.Types.optional;
 import static org.assertj.core.api.Assertions.assertThat;
