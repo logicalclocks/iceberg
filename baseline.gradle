@@ -102,6 +102,10 @@ subprojects {
           '-Xep:DangerousThreadPoolExecutorUsage:OFF',
           '-Xep:DefaultCharset:ERROR',
           '-Xep:DefaultLocale:ERROR',
+          // Hive 4 deprecated the IMetaStoreClient overloads Iceberg calls (getTable,
+          // alter_table, dropTable, ...). The replacements take Hive-4-only request objects,
+          // so this fork keeps the deprecated calls rather than diverging from upstream Iceberg.
+          '-Xep:DeprecatedApiUsage:OFF',
           // subclasses are not equal
           '-Xep:EqualsGetClass:OFF',
           '-Xep:EqualsUnsafeCast:ERROR',

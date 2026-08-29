@@ -73,6 +73,15 @@ project(":iceberg-spark:iceberg-spark-${sparkMajorVersion}_${scalaVersion}") {
       exclude group: 'io.netty', module: 'netty-buffer'
       exclude group: 'io.netty', module: 'netty-common'
       exclude group: 'org.roaringbitmap'
+      // Spark's builtin Hive is 2.3.10, but the Hopsworks Spark distribution ships
+      // io.hops.hive 4.1.0. Compile HiveConf against the Hive we actually run with,
+      // otherwise the HIVE-27925-renamed ConfVars constants don't resolve.
+      exclude group: 'org.apache.hive'
+    }
+    compileOnly(libs.hive2.common) {
+      exclude group: 'org.apache.logging.log4j'
+      exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+      exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
 
     implementation libs.parquet.column

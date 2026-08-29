@@ -177,8 +177,8 @@ public class TestHiveMetastore {
       // in Hive3, setting this as a system prop ensures that it will be picked up whenever a new
       // HiveConf is created
       System.setProperty(
-          HiveConf.ConfVars.METASTOREURIS.varname,
-          hiveConf.getVar(HiveConf.ConfVars.METASTOREURIS));
+          HiveConf.ConfVars.METASTORE_URIS.varname,
+          hiveConf.getVar(HiveConf.ConfVars.METASTORE_URIS));
 
       this.clientPool = new HiveClientPool(1, hiveConf);
     } catch (Exception e) {
@@ -256,7 +256,7 @@ public class TestHiveMetastore {
       throws Exception {
     HiveConf serverConf = new HiveConf(conf);
     serverConf.set(
-        HiveConf.ConfVars.METASTORECONNECTURLKEY.varname,
+        HiveConf.ConfVars.METASTORE_CONNECT_URL_KEY.varname,
         "jdbc:derby:" + DERBY_PATH + ";create=true");
     baseHandler = HMS_HANDLER_CTOR.newInstance("new db based metaserver", serverConf);
     IHMSHandler handler = GET_BASE_HMS_HANDLER.invoke(serverConf, baseHandler, false);
@@ -273,9 +273,9 @@ public class TestHiveMetastore {
   }
 
   private void initConf(HiveConf conf, int port, boolean directSql) {
-    conf.set(HiveConf.ConfVars.METASTOREURIS.varname, "thrift://localhost:" + port);
+    conf.set(HiveConf.ConfVars.METASTORE_URIS.varname, "thrift://localhost:" + port);
     conf.set(
-        HiveConf.ConfVars.METASTOREWAREHOUSE.varname, "file:" + HIVE_LOCAL_DIR.getAbsolutePath());
+        HiveConf.ConfVars.METASTORE_WAREHOUSE.varname, "file:" + HIVE_LOCAL_DIR.getAbsolutePath());
     conf.set(HiveConf.ConfVars.METASTORE_TRY_DIRECT_SQL.varname, String.valueOf(directSql));
     conf.set(HiveConf.ConfVars.METASTORE_DISALLOW_INCOMPATIBLE_COL_TYPE_CHANGES.varname, "false");
     conf.set("iceberg.hive.client-pool-size", "2");

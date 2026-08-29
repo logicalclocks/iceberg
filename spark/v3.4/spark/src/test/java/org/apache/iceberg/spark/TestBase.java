@@ -18,7 +18,7 @@
  */
 package org.apache.iceberg.spark;
 
-import static org.apache.hadoop.hive.conf.HiveConf.ConfVars.METASTOREURIS;
+import static org.apache.hadoop.hive.conf.HiveConf.ConfVars.METASTORE_URIS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;

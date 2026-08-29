@@ -18,7 +18,7 @@
  */
 package org.apache.iceberg.spark.extensions;
 
-import static org.apache.hadoop.hive.conf.HiveConf.ConfVars.METASTOREURIS;
+import static org.apache.hadoop.hive.conf.HiveConf.ConfVars.METASTORE_URIS;
 
 import java.io.File;
 import java.io.IOException;
